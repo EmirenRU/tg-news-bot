@@ -111,7 +111,7 @@ public class TelegramBotServiceImpl {
     }
 
     private boolean isValidPayment(PreCheckoutQuery query) {
-        return (query != null && query.invoicePayload().startsWith("premium_sub_") && userService.ifExists(query.from().id()));
+        return (query != null && query.invoicePayload().startsWith("premium_sub_"));
     }
 
     private void handleCallbackQuery(Update update) {

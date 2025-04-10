@@ -156,11 +156,12 @@ public class CommandHandler {
         log.info("Payment section with user {} and id {}", update.callbackQuery().from().id(), update.callbackQuery().id());
 
         int oneMonthPrice = 100;
-        int threeMonthsPrice = 2;
-        int sixMonthsPrice = 5;
+        int threeMonthsPrice = 200;
+        int sixMonthsPrice = 500;
 
         SendInvoice invoice = new SendInvoice(chatId,  "News Premium", "Premium for one month",  invoicePayload, "XTR",
                 new LabeledPrice("1 month", oneMonthPrice)
+
         )
                 .providerToken("")
                 .sendEmailToProvider(false)

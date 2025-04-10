@@ -161,7 +161,7 @@ public class ParserServiceImpl implements ParserService {
     }
 
     @Override
-    @Scheduled(fixedRate = 100000, initialDelay = 100000)
+    @Scheduled(fixedRate = 100000, initialDelay = 5000)
 //    @Async
     public void parseSites() {
         log.info("Starting parsing sites by scheduler");
