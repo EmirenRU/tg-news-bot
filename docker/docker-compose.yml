@@ -1,0 +1,23 @@
+services:
+  kafka:
+    image: apache/kafka:4.0.0
+
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=fqworkstation,support
+      - POSTGRES_USER=temp
+      - POSTGRES_PASSWORD=temp
+    ports:
+      - "5432:5432"
+
+  ollama:
+    image: 'ollama/ollama:latest'
+    ports:
+      - '11434'
+
+  app:
+    image: maven:3.9.6-eclipse-temurin-21
+    links:
+      - kafka
+      - db
