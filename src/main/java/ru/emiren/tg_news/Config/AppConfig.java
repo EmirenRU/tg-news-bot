@@ -56,6 +56,7 @@ public class AppConfig {
             Prediction: %s
             URL: %s
             Time: %s
+            Disclaimer: The responsibility for your actions and the interpretation of news fall on you.
             """;
 
     private final String receipt = """

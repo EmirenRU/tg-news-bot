@@ -54,7 +54,13 @@ public class NewsServiceImpl implements NewsService {
 
 
     @Autowired
-    public NewsServiceImpl(NewsRepository newsRepository, TelegramBot telegramBot, UserService userService, String newsText, Gson gson, KafkaTemplate<String, News> kafkaTemplate) {
+    public NewsServiceImpl(NewsRepository newsRepository,
+                           TelegramBot telegramBot,
+                           UserService userService,
+                           String newsText,
+                           Gson gson,
+                           KafkaTemplate<String, News> kafkaTemplate
+    ) {
         this.newsRepository = newsRepository;
         this.bot = telegramBot;
         this.userService = userService;
@@ -180,11 +186,6 @@ public class NewsServiceImpl implements NewsService {
 
     private CompletableFuture<Void> publishToKafka(News news) {
         return CompletableFuture.runAsync(() -> kafkaTemplate.send("news", news));
-    }
-
-    @KafkaListener(topics = "news")
-    private void getNewsFromTopicToSave(News news) {
-        saveNews(news);
     }
 
     @Override

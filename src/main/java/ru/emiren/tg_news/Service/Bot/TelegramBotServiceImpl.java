@@ -11,8 +11,12 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import ru.emiren.tg_news.DTO.UserChatIDs;
+import ru.emiren.tg_news.Model.News;
 import ru.emiren.tg_news.Model.User;
+import ru.emiren.tg_news.Service.News.NewsService;
 import ru.emiren.tg_news.Service.Role.RoleService;
 import ru.emiren.tg_news.Service.User.UserService;
 
@@ -32,15 +36,19 @@ public class TelegramBotServiceImpl {
     private final UserService userService;
     private final String receipt;
     private final RoleService roleService;
+    private final String newsText;
+    private final NewsService newsService;
 
     @Autowired
-    public TelegramBotServiceImpl(CommandHandler commandHandler, TelegramBot telegramBot, List<BotCommand> botCommands, UserService userService, String receipt, RoleService roleService) {
+    public TelegramBotServiceImpl(CommandHandler commandHandler, TelegramBot telegramBot, List<BotCommand> botCommands, UserService userService, String receipt, RoleService roleService, String newsText, NewsService newsService) {
         this.commandHandler = commandHandler;
         this.bot = telegramBot;
         this.botCommands = botCommands;
         this.userService = userService;
         this.receipt = receipt;
         this.roleService = roleService;
+        this.newsText = newsText;
+        this.newsService = newsService;
     }
 
     @PostConstruct
@@ -131,6 +139,19 @@ public class TelegramBotServiceImpl {
         } else if (update.message().successfulPayment() != null) {
             handleSuccessfulPayment(update);
         }
+    }
+
+    @KafkaListener(topics = "news")
+    private void getNewsFromTopicToSave(News news) {
+        if (Boolean.TRUE.equals(news.getIsCritical())){
+            List<UserChatIDs> premiums = userService.getAllPremiumUsers();
+            for (UserChatIDs premium : premiums) {
+                bot.execute(new SendMessage(premium.getChatId().toString(), newsText.formatted(
+                        news.getTitle(), news.getContent(), news.getPrediction(), news.getUrl(), news.getDate()
+                )));
+            }
+        }
+        newsService.saveNews(news);
     }
 
     private void setupMenuButtons(){
