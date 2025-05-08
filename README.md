@@ -7,3 +7,6 @@
 2. Run Kafka and Ollama with deepseek-r1 model through local or by utilizing docker
 
 3. Execute the app
+
+## TODO
+- Find the AI server, which will provide api
